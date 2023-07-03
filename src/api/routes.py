@@ -16,3 +16,52 @@ def handle_hello():
     }
 
     return jsonify(response_body), 200
+
+@api.route('/signup', methods=['POST'])
+def signup():
+    # Retrieve request data
+    username = request.json.get('username')
+    password = request.json.get('password')
+
+    # Check if the email is already registered
+    if User.query.filter_by(username=username).first():
+        return jsonify(message='Username already registered'), 409  
+
+    # Create a new user object
+    new_user = User(username=username, password=password)
+
+    try:
+        db.session.add(new_user)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(sys.exc_info())
+        return jsonify(message='Failed to register user'), 500
+
+    user_id = new_user.id
+
+    return jsonify(message='User registered successfully', user_id=user_id), 201
+
+
+@api.route('/login', methods=['POST'])
+def login():
+    username = request.json.get("username", None)
+    password = request.json.get("password", None)
+
+    # Perform authentication
+    user = User.query.filter_by(username=username).first()
+
+    if user is None or not password == user.password:
+        if user is None or not user.check_password(password):
+            return jsonify({"msg": "Incorrect email or password"}), 401
+
+    # Generate access token
+    access_token = create_access_token(identity=username)
+    return jsonify(access_token=access_token, user_id=user.id)
+
+
+@api.route('/logout', methods=['POST'])
+def logout():
+    # Remove the stored access token from the session
+    session.pop('access_token', None)
+    return jsonify({'message': 'Logged out successfully'}), 200
