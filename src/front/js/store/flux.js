@@ -21,6 +21,33 @@ const getState = ({ getStore, getActions, setStore }) => {
 				getActions().changeColor(0, "green");
 			},
 
+      //signup 
+	  signup: async function(username, password) {
+		try {
+			const response = await fetch(`${process.env.BACKEND_URL}api/signup`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ username: username, password: password })
+			});
+			const data = await response.json(); 
+	
+			if (!response.ok) {
+				throw new Error(data.message);
+			}
+	
+			setStore({ user: data });
+	
+			return true;
+		} catch (err) {
+			console.error(err);
+			return false;
+		}
+	},
+	
+	//login
+
 			getMessage: async () => {
 				try{
 					// fetching data from the backend

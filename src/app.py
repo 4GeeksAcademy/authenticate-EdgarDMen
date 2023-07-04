@@ -31,6 +31,7 @@ MIGRATE = Migrate(app, db, compare_type = True)
 db.init_app(app)
 
 # Allow CORS requests to this API
+app = Flask(__name__)
 CORS(app)
 
 # add the admin
