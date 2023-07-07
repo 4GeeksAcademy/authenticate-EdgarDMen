@@ -51,13 +51,14 @@ def login():
     # Perform authentication
     user = User.query.filter_by(username=username).first()
 
-    if user is None or not password == user.password:
-        if user is None or not user.check_password(password):
-            return jsonify({"msg": "Incorrect email or password"}), 401
+    # Check user and password validity
+    if user is None or not user.check_password(password):
+        return jsonify({"msg": "Incorrect username or password"}), 401
 
     # Generate access token
     access_token = create_access_token(identity=username)
     return jsonify(access_token=access_token, user_id=user.id)
+
 
 
 @api.route('/logout', methods=['POST'])

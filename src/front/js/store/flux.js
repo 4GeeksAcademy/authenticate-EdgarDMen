@@ -21,6 +21,39 @@ const getState = ({ getStore, getActions, setStore }) => {
 				getActions().changeColor(0, "green");
 			},
 
+			//login
+			login: async function(username, password) {
+				try {
+					const response = await fetch(`${process.env.BACKEND_URL}/api/login`, {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify({ username: username, password: password })
+					});
+					const data = await response.json();
+			
+					if (!response.ok) {
+						throw new Error(data.message);
+					}
+			
+					// The following line assumes that the response will contain a JWT token
+					// Update according to your actual API response
+					setStore({ user: data.user, token: data.token }); 
+			
+					return true;
+				} catch (err) {
+					console.error(err);
+					return false;
+				}
+			},
+			
+
+			//logout
+			logout: function() {
+				setStore({ user: null, token: null });
+			},
+			
       //signup 
 	  signup: async function(username, password) {
 		try {
