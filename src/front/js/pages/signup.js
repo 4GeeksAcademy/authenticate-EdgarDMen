@@ -2,9 +2,6 @@ import React, { useContext, useState } from "react";
 import { Context } from "../store/appContext";
 import { useNavigate } from "react-router-dom";
 
-
-
-
 export const Signup = () => {
   const { store, actions } = useContext(Context);
   const [username, setUsername] = useState("");
@@ -27,7 +24,6 @@ export const Signup = () => {
       console.log("username/password Incorrect");
     }
   };
-
 
   return (
       <div>

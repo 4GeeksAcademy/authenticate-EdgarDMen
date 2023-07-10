@@ -18,6 +18,8 @@ ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
 static_file_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../public/')
 app = Flask(__name__)
 app.url_map.strict_slashes = False
+CORS(app)
+
 
 # database condiguration
 db_url = os.getenv("DATABASE_URL")
@@ -30,9 +32,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 MIGRATE = Migrate(app, db, compare_type = True)
 db.init_app(app)
 
-# Allow CORS requests to this API
-app = Flask(__name__)
-CORS(app)
 
 # add the admin
 setup_admin(app)
