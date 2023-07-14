@@ -1,21 +1,39 @@
 import React, { useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import { useNavigate } from "react-router-dom";
+import "../../styles/index.css"
 
 export const Private = () => {
   const { store, actions } = useContext(Context);
-  const history = useNavigate();
+  const navigate = useNavigate();
+
+  console.log('Token in Private:', store.token);
 
   useEffect(() => {
-    if (!store.token || store.token === "") {
-      history("/login");
-    }
-  }, [store.token, history]);
+    const checkLoggedIn = async () => {
+      const response = await fetch('/api/logged_in', {
+        method: 'GET',
+        credentials: 'include', 
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+      if (!data.logged_in) {
+        navigate("/login");
+      }
+    };
+  
+    
+ 
+    checkLoggedIn();
+  }, [navigate]);
 
   const handleLogout = async () => {
-    await actions.logout(); 
-    history("/login");
+    await actions.logout();
+    navigate("/login");
   };
+
 
   return (
     <div>

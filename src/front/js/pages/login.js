@@ -6,7 +6,7 @@ export const Login = () => {
   const { store, actions } = useContext(Context);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const history = useNavigate();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -14,18 +14,17 @@ export const Login = () => {
       alert("Username or password cannot be empty");
     } else {
       const loginSuccess = await actions.login(username, password);
-      console.log("Login success:", loginSuccess);
       if (loginSuccess) {
-        history("/private");
+        navigate("/private"); // Navigates the user to the Private page
       }
     }
   };
 
   useEffect(() => {
     if (store.token && store.token !== "" && store.token !== undefined) {
-      history("/private");
+      navigate("/private"); 
     }
-  }, [store.token, history]);
+  }, [store.token, navigate]);
 
   return (
     <div className="body">

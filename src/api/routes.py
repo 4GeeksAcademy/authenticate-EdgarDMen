@@ -4,9 +4,10 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 from flask import Flask, request, jsonify, url_for, Blueprint, session
 from api.models import db, User 
 from api.utils import generate_sitemap, APIException
+from flask_cors import CORS
 
 api = Blueprint('api', __name__)
-
+CORS(api, origins=['https://edgardmen-symmetrical-space-guacamole-56pqrpw5x573495x-3000.preview.app.github.dev'])
 
 @api.route('signup', methods=['POST'])
 def signup():
@@ -33,6 +34,11 @@ def signup():
 
     return jsonify(message='User registered successfully', user_id=user_id), 201
 
+@api.route('/api/signup', methods=['OPTIONS'])
+def options_signup():
+    return '', 200
+
+@api.route('login', methods=['POST'])
 @api.route('login', methods=['POST'])
 def login():
     username = request.json.get("username", None)
@@ -46,6 +52,14 @@ def login():
     session['user_id'] = user.id
 
     return jsonify(user_id=user.id)
+
+@api.route('logged_in', methods=['GET'])
+def logged_in():
+    user_id = session.get('user_id')
+    if user_id is None:
+        return jsonify(logged_in=False)
+    else:
+        return jsonify(logged_in=True)
 
 @api.route('logout', methods=['POST'])
 def logout():

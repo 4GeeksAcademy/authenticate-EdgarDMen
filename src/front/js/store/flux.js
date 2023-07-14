@@ -24,7 +24,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			//login
 			login: async function(username, password) {
 				try {
-					const response = await fetch(`${process.env.BACKEND_URL}api/login`, {
+					const response = await fetch(`https://edgardmen-symmetrical-space-guacamole-56pqrpw5x573495x-3001.preview.app.github.dev/api/login/`, {
 						method: 'POST',
 						headers: {
 							'Content-Type': 'application/json'
@@ -33,6 +33,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					});
 					const data = await response.json();
 					setStore({ user: data.user_id, token: data.access_token }); 
+					console.log('Token after login:', getStore().token);
 					if (!response.ok) {
 						throw new Error(data.message);
 					}			
@@ -52,7 +53,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       //signup 
 	  signup: async function(username, password) {
 		try {
-			const response = await fetch(`${process.env.BACKEND_URL}api/signup`, {
+			const response = await fetch(`https://edgardmen-symmetrical-space-guacamole-56pqrpw5x573495x-3001.preview.app.github.dev/api/signup/`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -74,11 +75,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 		}
 	},
 	
-	//login
+	//get message
 	getMessage: async () => {
 		try {
 			// fetching data from the backend
-			const resp = await fetch(`${process.env.BACKEND_URL}/api/hello`);
+			const resp = await fetch(`https://edgardmen-symmetrical-space-guacamole-56pqrpw5x573495x-3001.preview.app.github.dev/api/hello`);
 			const data = await resp.json();
 			setStore({ message: data.message });
 			// don't forget to return something, that is how the async resolves
