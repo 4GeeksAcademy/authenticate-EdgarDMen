@@ -24,7 +24,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			//login
 			login: async function(username, password) {
 				try {
-					const response = await fetch(`https://edgardmen-symmetrical-space-guacamole-56pqrpw5x573495x-3001.preview.app.github.dev/api/login/`, {
+					const response = await fetch(`${process.env.BACKEND_URL}/api/login/`, {
 						method: 'POST',
 						headers: {
 							'Content-Type': 'application/json'
@@ -43,51 +43,50 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return false;
 				}
 			},
-			
 
 			//logout
 			logout: function() {
 				setStore({ user: null, token: null });
 			},
 			
-      //signup 
-	  signup: async function(username, password) {
-		try {
-			const response = await fetch(`https://edgardmen-symmetrical-space-guacamole-56pqrpw5x573495x-3001.preview.app.github.dev/api/signup/`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({ username: username, password: password })
-			});
-			const data = await response.json(); 
+      		//signup 
+	  		signup: async function(username, password) {
+				try {
+					const response = await fetch(`${process.env.BACKEND_URL}/api/signup/`, {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify({ username: username, password: password })
+					});
+					const data = await response.json(); 
 	
-			if (!response.ok) {
-				throw new Error(data.message);
-			}
+					if (!response.ok) {
+						throw new Error(data.message);
+					}
 	
-			setStore({ user: data });
+					setStore({ user: data });
 	
-			return true;
-		} catch (err) {
-			console.error(err);
-			return false;
-		}
-	},
+					return true;
+				} catch (err) {
+					console.error(err);
+					return false;
+				}
+			},
 	
-	//get message
-	getMessage: async () => {
-		try {
-			// fetching data from the backend
-			const resp = await fetch(`https://edgardmen-symmetrical-space-guacamole-56pqrpw5x573495x-3001.preview.app.github.dev/api/hello`);
-			const data = await resp.json();
-			setStore({ message: data.message });
-			// don't forget to return something, that is how the async resolves
-			return data;
-		} catch (error) {
-			console.log("Error loading message from backend", error);
-		}
-	},
+			//get message
+			getMessage: async () => {
+				try {
+					// fetching data from the backend
+					const resp = await fetch(`${process.env.BACKEND_URL}/api/hello`);
+					const data = await resp.json();
+					setStore({ message: data.message });
+					// don't forget to return something, that is how the async resolves
+					return data;
+				} catch (error) {
+					console.log("Error loading message from backend", error);
+				}
+			},
 	
 			changeColor: (index, color) => {
 				const store = getStore();
